@@ -12,6 +12,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mock Phone App with Leaflet Map</title>
@@ -42,12 +43,13 @@
         background-color: #fff;
         overflow: hidden;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
       }
 
       /* Header */
       .header {
-        height: 60px;
-        background-color: #d3d3d3;
+        height: 0px;
+        background-color: #f3f3f3;
         color: #5179ff;
         display: flex;
         justify-content: left;
@@ -56,7 +58,6 @@
         font-size: 18px;
         font-weight: bold;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-        /* Adds shadow to header */
         z-index: 1;
       }
 
@@ -70,54 +71,129 @@
       /* Leaflet Map */
       #map {
         width: 100%;
-        height: 500px;
+        height: 100%;
+        position: absolute;
+        z-index: 0;
       }
 
       /* Footer */
       .footer {
-        height: 110px;
-        background-color: #d3d3d3;
+        height: 712px;
+        background-color: #e9e9e9;
         color: #1e1e1e;
         display: flex;
-        justify-content: space-around;
+        flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
         font-size: 14px;
         padding: 0;
-        flex-direction: column;
         box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.3);
-        /* Adds shadow to footer */
-        z-index: 1;
+        position: absolute;
+        bottom: -582px; /* Initial hidden part */
+        transition: bottom 0.4s ease; /* Slide up animation */
+        width: 100%;
+        border-radius: 20px;
+      }
+
+      /* Footer active state */
+      .footer.active {
+        bottom: 0; /* Fully visible when active */
+      }
+
+      .pull-bar {
+        width: 80px;
+        height: 8px;
+        background-color: #c6c6c6;
+        border-radius: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+      #secondPullBar {
+        margin-top: 0px;
       }
 
       .footer-text {
         font-size: 16px;
         color: #333;
-        margin-top: -10px;
-        margin-bottom: -20px;
+        margin-top: 14px;
+        margin-bottom: 15px;
         text-align: center;
+      }
+      .percentage {
+        font-size: 20px;
+        color: #168ce1;
+        font-weight: bold;
+      }
+      .percentage2 {
+        font-size: 20px;
+        color: #0d4d7b;
+        font-weight: bold;
       }
 
       .footer-buttons {
         display: flex;
         justify-content: space-around;
-        width: 90%;
+        width: 95%;
+        margin-top: 0;
+        margin-bottom: 3px;
       }
 
       .footer-button {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #5179ff;
+        background-color: #168ce1;
         color: white;
-        width: 150px;
-        height: 50px;
+        width: 170px;
+        height: 55px;
         font-size: 16px;
         font-weight: bold;
-        border-radius: 5px;
+        border-radius: 15px;
         text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .footer-button.navy {
+        background-color: #0d4d7b;
+      }
+
+      .shadowBox {
+        width: 100%;
+        height: 10px;
+        background-color: #e9e9e9;
+        position: absolute;
+        top: 183px;
+        z-index: 5;
+        opacity: 100%;
+        box-shadow: 0px 8px 6px 0px rgba(0, 0, 0, 0.3);
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+
+      #footBut2 {
+        background-color: #e9e9e9;
+        border-style: solid;
+        border-width: 4px;
+        border-color: #168ce1;
+        color: #168ce1;
+      }
+
+      /* Secondary map styling */
+      #secondary-map {
+        width: 100%;
+        height: 1050px;
+        margin-top: 15px;
+        border-radius: 0px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 1;
       }
     </style>
   </head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
   <body>
     <div class="app-container">
       <!-- Header -->
@@ -130,20 +206,43 @@
       </div>
 
       <!-- Footer Navigation -->
-      <div class="footer">
+      <div class="footer" id="footer">
+        <div class="pull-bar" onclick="toggleFooter()"></div>
         <div class="footer-text">
-          You've Explored 21.92% of University Village!
+          You've Explored <span class="percentage">21.92%</span> of Little
+          Italy!
         </div>
+
         <div class="footer-buttons">
-          <div class="footer-button">Landmarks</div>
-          <div class="footer-button">Leaderboard</div>
+          <div
+            class="footer-button"
+            id="landmarks-button"
+            onclick="goToLandmarks()"
+          >
+            3/13 Landmarks
+          </div>
+          <div
+            class="footer-button"
+            id="leaderboard-button"
+            onclick="goToLeaderboard()"
+          >
+            #56 Leaderboard
+          </div>
         </div>
+        <!-- Secondary Map Tile -->
+        <div class="footer-text">
+          You've Explored <span class="percentage2">2.03%</span> of Chicago!
+        </div>
+        <div class="pull-bar" id="secondPullBar" onclick="toggleFooter()"></div>
+        <div class="shadowBox"></div>
+        <div id="secondary-map"></div>
       </div>
     </div>
 
     <!-- Leaflet JavaScript -->
     <script>
-      var map = L.map("map").setView([41.866369, -87.64731], 16);
+      // Initialize the main map
+      var map = L.map("map").setView([41.866109, -87.64734], 17.5);
       L.tileLayer(
         "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=Z4ewyOYv2NQn29nDtEoJ",
         {
@@ -152,13 +251,121 @@
         }
       ).addTo(map);
 
+      // Load and display boundaries.geojson minus intersections with logbook.geojson
+      Promise.all([
+        fetch("Boundaries.geojson").then((response) => response.json()),
+        fetch("logbook.geojson").then((response) => response.json()),
+      ])
+        .then(([boundariesData, logbookData]) => {
+          // Create an empty GeoJSON feature collection to hold the resulting polygons
+          let resultPolygons = {
+            type: "FeatureCollection",
+            features: [],
+          };
+
+          // Loop over each boundary polygon
+          boundariesData.features.forEach((boundaryFeature) => {
+            let boundaryPolygon = boundaryFeature;
+
+            // Loop over each logbook polygon to subtract from boundary polygon
+            logbookData.features.forEach((logbookFeature) => {
+              // Use Turf.js difference to subtract logbook polygons from boundary polygon
+              boundaryPolygon =
+                turf.difference(boundaryPolygon, logbookFeature) ||
+                boundaryPolygon;
+            });
+
+            // Add the resulting polygon (or the original if no intersection) to the result collection
+            if (boundaryPolygon) {
+              resultPolygons.features.push(boundaryPolygon);
+            }
+          });
+
+          // Add the resulting difference polygons to the map
+          L.geoJSON(resultPolygons, {
+            style: {
+              fillColor: "#168ce1",
+              color: "#FFFFFF",
+              weight: 2.9,
+              opacity: 1,
+              fillOpacity: 0.9,
+            },
+          }).addTo(map);
+        })
+        .catch((error) => console.error("Error loading GeoJSON files:", error));
+
+      // Add a marker to the main map
       var greenIcon = L.icon({
         iconUrl: "currloc.png",
         iconSize: [30, 30], // size of the icon
         iconAnchor: [15, 30], // adjusted to better center the icon
         popupAnchor: [0, -20], // adjusted to open the popup above the icon
       });
-      L.marker([41.865069, -87.64711], { icon: greenIcon }).addTo(map);
+      L.marker([41.866269, -87.64731], { icon: greenIcon }).addTo(map);
+
+      // Function to navigate to the landmarks page
+      function goToLandmarks() {
+        window.location.href = "landmarks.html";
+      }
+
+      function goToLeaderboard() {
+        window.location.href = "leaderboard.html";
+      }
+
+      // Function to toggle footer visibility
+      function toggleFooter() {
+        const footer = document.getElementById("footer");
+        const landmarksButton = document.getElementById("landmarks-button");
+        const leaderboardButton = document.getElementById("leaderboard-button");
+
+        footer.classList.toggle("active");
+
+        if (footer.classList.contains("active")) {
+          // Update text and color when footer is expanded
+          landmarksButton.textContent = "8/389 Landmarks";
+          leaderboardButton.textContent = "#87 Leaderboard";
+          landmarksButton.classList.add("navy");
+          leaderboardButton.classList.add("navy");
+        } else {
+          // Revert text and color when footer is collapsed
+          landmarksButton.textContent = "3/13 Landmarks";
+          leaderboardButton.textContent = "#56 Leaderboard";
+          landmarksButton.classList.remove("navy");
+          leaderboardButton.classList.remove("navy");
+        }
+      }
+
+      // Initialize the secondary map
+      var secondaryMap = L.map("secondary-map", {
+        center: [41.856369, -87.72031],
+        zoom: 10,
+        dragging: false,
+        zoomControl: false,
+        scrollWheelZoom: false,
+      });
+
+      L.tileLayer(
+        "https://api.maptiler.com/maps/backdrop/{z}/{x}/{y}.png?key=Z4ewyOYv2NQn29nDtEoJ",
+        {
+          attribution: "",
+        }
+      ).addTo(secondaryMap);
+
+      fetch("Boundaries.geojson")
+        .then((response) => response.json())
+        .then((data) => {
+          var boundariesLayer2 = L.geoJSON(data, {
+            style: function () {
+              return {
+                color: "#0d4d7b",
+                weight: 0.9,
+                opacity: 1,
+                fillOpacity: 0.7,
+              };
+            },
+          }).addTo(secondaryMap);
+        })
+        .catch((error) => console.error("Error loading GeoJSON:", error));
     </script>
   </body>
 </html>
