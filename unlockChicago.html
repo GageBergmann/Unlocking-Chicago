@@ -233,7 +233,7 @@
       <div class="footer" id="footer">
         <div class="pull-bar" onclick="toggleFooter()"></div>
         <div class="footer-text">
-          You've Explored <span class="percentage">21.92%</span> of Little
+          You've Explored <span class="percentage">15.92%</span> of Little
           Italy!
         </div>
 
@@ -243,19 +243,19 @@
             id="landmarks-button"
             onclick="goToLandmarks()"
           >
-            3/13 Landmarks
+            8/13 Landmarks
           </div>
           <div
             class="footer-button"
             id="leaderboard-button"
             onclick="goToLeaderboard()"
           >
-            #56 Leaderboard
+            #3 Leaderboard
           </div>
         </div>
         <!-- Secondary Map Tile -->
         <div class="footer-text">
-          You've Explored <span class="percentage2">2.03%</span> of Chicago!
+          You've Explored <span class="percentage2">0.63%</span> of Chicago!
         </div>
         <div class="pull-bar" id="secondPullBar" onclick="toggleFooter()"></div>
         <div class="shadowBox"></div>
@@ -287,6 +287,13 @@
             features: [],
           };
 
+          // Function to generate a random blue shade
+          const getRandomBlueShade = () => {
+            const baseBlue = 205; // Base blue shade in RGB (can adjust)
+            const randomOffset = Math.floor(Math.random() * 50) - 25; // Slight variation ±15
+            return `rgb(22, 140, ${baseBlue + randomOffset})`;
+          };
+
           // Loop over each boundary polygon
           boundariesData.features.forEach((boundaryFeature) => {
             let boundaryPolygon = boundaryFeature;
@@ -305,15 +312,15 @@
             }
           });
 
-          // Add the resulting difference polygons to the map
+          // Add the resulting difference polygons to the map with variable color styling
           L.geoJSON(resultPolygons, {
-            style: {
-              fillColor: "#168ce1",
-              color: "#FFFFFF",
+            style: () => ({
+              fillColor: getRandomBlueShade(),
+              color: "#68c0ff",
               weight: 2.9,
               opacity: 1,
               fillOpacity: 0.9,
-            },
+            }),
           }).addTo(map);
         })
         .catch((error) => console.error("Error loading GeoJSON files:", error));
