@@ -216,11 +216,14 @@
         <button class="filter-button" onclick="filterLandmarks('Hyde Park')">
           Hyde Park
         </button>
-        <button class="filter-button" onclick="filterLandmarks('Wicker Park')">
-          Wicker Park
+        <button
+          class="filter-button"
+          onclick="filterLandmarks('Museum Campus')"
+        >
+          Museum Campus
         </button>
-        <button class="filter-button" onclick="filterLandmarks('Gold Coast')">
-          Gold Coast
+        <button class="filter-button" onclick="filterLandmarks('Loop')">
+          Loop
         </button>
         <button class="filter-button" onclick="filterLandmarks('River North')">
           River North
@@ -230,161 +233,66 @@
       <!-- Content -->
       <div class="content">
         <!-- Example Landmark tiles with data-neighborhood attributes for filtering -->
-        <div
-          class="landmark-item"
-          data-neighborhood="Little Italy"
-          data-locked="false"
-        >
-          <img
-            src="chicagoFire.jpg"
-            alt="Chicago Fire"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Engine 18 Chicago Fire</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="Little Italy"
-          data-locked="false"
-        >
-          <img src="pavilion.webp" alt="UIC Pavilion" class="landmark-photo" />
-          <div class="landmark-name">UIC Pavilion</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="Little Italy"
-          data-locked="false"
-        >
-          <img
-            src="holyfam.jpg"
-            alt="Holy Family Church"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <!-- Additional landmarks here -->
-        <div
-          class="landmark-item"
-          data-neighborhood="Lakeview"
-          data-locked="false"
-        >
-          <img
-            src="home.jpg"
-            alt="Belmont-Sheffield Bank"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Belmont-Sheffield Bank & Trust</div>
-        </div>
-
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="false"
-        >
-          <img
-            src="soldierfield.jpg"
-            alt="Soldier Field"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Soldier Field</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="false"
-        >
-          <img
-            src="museumCampus.jpg"
-            alt="Museum Campus"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Museum Campus</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="false"
-        >
-          <img
-            src="printingHouse.jpg"
-            alt="Printing House"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Printing House Row District</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="false"
-        >
-          <img
-            src="glessnerHouse.JPG"
-            alt="Glassner House"
-            class="landmark-photo"
-          />
-          <div class="landmark-name">Glassner House</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="true"
-        >
-          <img src="112.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="true"
-        >
-          <img src="111.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="true"
-        >
-          <img src="113.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="true"
-        >
-          <img src="114.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="true"
-        >
-          <img src="115.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="South Loop"
-          data-locked="true"
-        >
-          <img src="116.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
-        <div
-          class="landmark-item"
-          data-neighborhood="Little Italy"
-          data-locked="true"
-        >
-          <img src="117.jpeg" alt="Holy Family Church" class="landmark-photo" />
-          <div class="landmark-name">Holy Family Catholic Church</div>
-        </div>
       </div>
     </div>
 
     <script>
       let activeFilter = "";
+
+      // Fetch and display landmarks from an external JSON file
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch("landmarks.JSON")
+          .then((response) => response.json())
+          .then((landmarks) => displayLandmarks(landmarks))
+          .catch((error) => console.error("Error loading landmarks:", error));
+      });
+
+      function displayLandmarks(landmarks) {
+        const contentDiv = document.querySelector(".content");
+
+        landmarks.forEach((landmark) => {
+          // Create the landmark item container
+          const landmarkItem = document.createElement("div");
+          landmarkItem.classList.add("landmark-item");
+          landmarkItem.dataset.neighborhood = landmark.neighborhood;
+          landmarkItem.dataset.locked = landmark.locked;
+
+          // Create the landmark image
+          const img = document.createElement("img");
+          img.src = landmark.image;
+          img.alt = landmark.name;
+          img.classList.add("landmark-photo");
+
+          // Create the landmark name
+          const nameDiv = document.createElement("div");
+          nameDiv.classList.add("landmark-name");
+          nameDiv.textContent = landmark.name;
+
+          // Append image and name to the landmark item
+          landmarkItem.appendChild(img);
+          landmarkItem.appendChild(nameDiv);
+
+          // Handle locked landmarks
+          if (landmark.locked) {
+            img.style.filter = "blur(5px)";
+            const lockedLabel = document.createElement("div");
+            lockedLabel.textContent = "Locked";
+            lockedLabel.style.position = "absolute";
+            lockedLabel.style.top = "75px";
+            lockedLabel.style.width = "100%";
+            lockedLabel.style.textAlign = "center";
+            lockedLabel.style.fontSize = "14px";
+            lockedLabel.style.fontWeight = "bold";
+            lockedLabel.style.color = "#fff";
+            landmarkItem.appendChild(lockedLabel);
+            nameDiv.style.visibility = "hidden";
+            landmarkItem.style.pointerEvents = "none"; // Prevent interaction
+          }
+
+          // Append landmark item to the content div
+          contentDiv.appendChild(landmarkItem);
+        });
+      }
 
       function filterLandmarks(neighborhood) {
         const buttons = document.querySelectorAll(".filter-button");
@@ -400,9 +308,7 @@
         buttons.forEach((button) => {
           if (button.textContent.trim() === neighborhood && activeFilter) {
             button.classList.add("active");
-            // Show only the selected button
             button.style.display = "inline-flex";
-            // Add the "X" if it doesn't exist
             if (!button.querySelector(".close")) {
               const closeButton = document.createElement("span");
               closeButton.className = "close";
@@ -416,7 +322,6 @@
             if (closeButton) {
               closeButton.remove();
             }
-            // Hide all non-selected buttons when a filter is active
             button.style.display = activeFilter ? "none" : "inline-flex";
           }
         });

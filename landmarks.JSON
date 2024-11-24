@@ -1,0 +1,53 @@
+[
+    {
+      "neighborhood": "Little Italy",
+      "name": "Engine 18 Chicago Fire",
+      "image": "chicagoFire.jpg",
+      "description": "The historic Engine 18 firehouse.",
+      "coordinates": [41.8659, -87.6523],
+      "locked": false
+    },
+    {
+      "neighborhood": "Museum Campus",
+      "name": "Alder Planetarium",
+      "image": "museumCampus.jpg",
+      "description": "A hub for museums including the Field Museum.",
+      "coordinates": [41.8663, -87.6068],
+      "locked": false
+    },
+    {
+        "neighborhood": "Little Italy",
+        "name": "Jim's Original",
+        "image": "jims.jpg",
+        "description": "NA",
+        "coordinates": [41.865770500190735, -87.64519196775782],
+        "locked": false
+    },
+    {
+        "neighborhood": "Loop",
+        "name": "Buddy Guy's Legends",
+        "image": "BGLegends.jpg",
+        "description": "NA",
+        "coordinates": [41.872999005514146, -87.62617836441699],
+        "locked": true
+    },
+    {
+        "neighborhood": "Old Town",
+        "name": "The Second City",
+        "image": "chicagoFire.jpg",
+        "description": "NA",
+        "coordinates": [41.91122084556429, -87.63536259556223],
+        "locked": true
+    },
+    {
+        "neighborhood": "Museum Campus",
+        "name": "Northerly Island - Southern Tip",
+        "image": "NISouthernTip.webp",
+        "description": "NA",
+        "coordinates": [41.85330738518701, -87.6085833165336],
+        "locked": false
+    }
+
+  
+  ]
+  
