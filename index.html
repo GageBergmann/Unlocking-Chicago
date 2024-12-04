@@ -607,10 +607,7 @@
         const progressData = {
           exploredAreas,
           userCoords,
-          landmarks: landmarksData.map((landmark) => ({
-            ...landmark,
-            marker: null, // Avoid storing the marker object
-          })),
+
           currentNeighborhood,
         };
 
