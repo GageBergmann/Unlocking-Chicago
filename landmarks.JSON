@@ -1,5 +1,21 @@
 [
     {
+    "neighborhood": "Museum Campus",
+    "name": "Soldier Field",
+    "image": "soldierfield.jpg",
+    "description": "Decription TBA",
+    "coordinates": [41.86261694649829, -87.61669827116371],
+    "locked": false
+    },
+    {
+    "neighborhood": "West Loop",
+    "name": "Union Station",
+    "image": "union.jpg",
+    "description": "Decription TBA",
+    "coordinates": [41.87881501763317, -87.63977227116388],
+    "locked": false
+    },
+    {
       "neighborhood": "Little Italy",
       "name": "Engine 18 Chicago Fire",
       "image": "chicagoFire.jpg",

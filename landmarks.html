@@ -169,7 +169,6 @@
       }
 
       .landmark-item[data-locked="true"]::after {
-        content: "Locked";
         position: absolute;
         top: 75px; /* Adjust as needed */
         left: 0;
@@ -250,6 +249,8 @@
       function displayLandmarks(landmarks) {
         const contentDiv = document.querySelector(".content");
 
+        const userCoords = { lat: 41.8781, lng: -87.6298 }; // Replace with actual user location
+
         landmarks.forEach((landmark) => {
           // Create the landmark item container
           const landmarkItem = document.createElement("div");
@@ -257,9 +258,12 @@
           landmarkItem.dataset.neighborhood = landmark.neighborhood;
           landmarkItem.dataset.locked = landmark.locked;
 
+          const neighborhoodFolder = landmark.neighborhood.replace(/\s+/g, ""); // Remove spaces
+          const imagePath = `images/${neighborhoodFolder}/${landmark.image}`;
+
           // Create the landmark image
           const img = document.createElement("img");
-          img.src = landmark.image;
+          img.src = imagePath;
           img.alt = landmark.name;
           img.classList.add("landmark-photo");
 
@@ -274,24 +278,68 @@
 
           // Handle locked landmarks
           if (landmark.locked) {
+            // Calculate the distance from the user
+            const distance = calculateDistance(
+              userCoords.lat,
+              userCoords.lng,
+              landmark.coordinates[0],
+              landmark.coordinates[1]
+            );
+
+            // Create the distance display
+            const distanceDiv = document.createElement("div");
+            distanceDiv.textContent = `${distance.toFixed(1)} mi`;
+            distanceDiv.style.fontSize = "12px";
+            distanceDiv.style.color = "#333";
+            distanceDiv.style.marginTop = "5px";
+            landmarkItem.appendChild(distanceDiv);
+
+            const goButton = document.createElement("button");
+            goButton.textContent = "Go";
+            goButton.style.backgroundColor = "#22b14c";
+            goButton.style.color = "#fff";
+            goButton.style.border = "none";
+            goButton.style.borderRadius = "5px";
+            goButton.style.padding = "5px 10px";
+            goButton.style.fontSize = "14px";
+            goButton.style.marginTop = "5px";
+            goButton.style.cursor = "pointer";
+            goButton.onclick = () => {
+              const query = `?lat=${landmark.coordinates[0]}&lng=${landmark.coordinates[1]}`;
+              window.location.href = `compass.html${query}`;
+            };
+            landmarkItem.appendChild(goButton);
+
+            // Blur image and add locked label
             img.style.filter = "blur(5px)";
-            const lockedLabel = document.createElement("div");
-            lockedLabel.textContent = "Locked";
-            lockedLabel.style.position = "absolute";
-            lockedLabel.style.top = "75px";
-            lockedLabel.style.width = "100%";
-            lockedLabel.style.textAlign = "center";
-            lockedLabel.style.fontSize = "14px";
-            lockedLabel.style.fontWeight = "bold";
-            lockedLabel.style.color = "#fff";
-            landmarkItem.appendChild(lockedLabel);
+
             nameDiv.style.visibility = "hidden";
             landmarkItem.style.pointerEvents = "none"; // Prevent interaction
+          } else {
+            // Add onclick event to navigate to detailed page
+            landmarkItem.onclick = () => {
+              window.location.href = `landmark-detail.html?id=${landmark.id}`;
+            };
           }
 
           // Append landmark item to the content div
           contentDiv.appendChild(landmarkItem);
         });
+      }
+
+      // Function to calculate the distance between two coordinates
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 3958.8; // Radius of Earth in miles
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((lat1 * Math.PI) / 180) *
+            Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
       }
 
       function filterLandmarks(neighborhood) {
