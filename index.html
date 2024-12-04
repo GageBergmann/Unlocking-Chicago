@@ -335,7 +335,7 @@
         })
         .then((data) => {
           boundariesData = data; // Store the boundaries data
-          updateBoundariesWithDifference(); // Render initial boundaries
+          //updateBoundariesWithDifference(); // Render initial boundaries
         })
         .catch((error) => console.error("Error loading GeoJSON:", error));
 
@@ -603,15 +603,70 @@
           currentNeighborhood.properties.pri_neigh || "Unknown";
       }
 
+      function saveProgress() {
+        const progressData = {
+          exploredAreas,
+          userCoords,
+          landmarks: landmarksData.map((landmark) => ({
+            ...landmark,
+            marker: null, // Avoid storing the marker object
+          })),
+          currentNeighborhood,
+        };
+
+        localStorage.setItem("userProgress", JSON.stringify(progressData));
+      }
+      function loadProgress() {
+        const savedProgress = localStorage.getItem("userProgress");
+        if (savedProgress) {
+          const progressData = JSON.parse(savedProgress);
+
+          // Restore explored areas
+          exploredAreas = progressData.exploredAreas;
+          explorationLayer.clearLayers();
+          explorationLayer.addData(exploredAreas);
+
+          // Restore user coordinates and marker
+          userCoords = progressData.userCoords;
+          updateUserLocationMarker();
+          map.setView([userCoords.lat, userCoords.lng]);
+
+          // Restore landmarks state
+          if (progressData.landmarks && landmarksData) {
+            progressData.landmarks.forEach((savedLandmark) => {
+              const landmark = landmarksData.find(
+                (l) => l.name === savedLandmark.name
+              );
+              if (landmark) {
+                landmark.locked = savedLandmark.locked;
+                landmark.marker.setIcon(
+                  landmark.locked ? landmarkIconLocked : landmarkIconUnlocked
+                );
+              }
+            });
+          }
+
+          // Restore current neighborhood
+          currentNeighborhood = progressData.currentNeighborhood;
+          if (currentNeighborhood) {
+            updateAllBoundaries();
+            updateCurrentNeighborhoodWithDifference();
+          }
+        }
+      }
+
       function goToLandmarks() {
+        saveProgress();
         window.location.href = "landmarks.html";
       }
 
       function goToLeaderboard() {
+        saveProgress();
         window.location.href = "leaderboard.html";
       }
 
       function goToSettings() {
+        saveProgress();
         window.location.href = "settings.html";
       }
 
@@ -669,6 +724,8 @@
           }).addTo(secondaryMap);
         })
         .catch((error) => console.error("Error loading GeoJSON:", error));
+
+      loadProgress();
     </script>
   </body>
 </html>
