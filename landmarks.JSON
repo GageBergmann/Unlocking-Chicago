@@ -1,5 +1,6 @@
 [
     {
+    "id": "1",
     "neighborhood": "Museum Campus",
     "name": "Soldier Field",
     "image": "soldierfield.jpg",
@@ -8,6 +9,7 @@
     "locked": false
     },
     {
+    "id": "2",
     "neighborhood": "West Loop",
     "name": "Union Station",
     "image": "union.jpg",
@@ -16,6 +18,7 @@
     "locked": false
     },
     {
+      "id": "3",
       "neighborhood": "Little Italy",
       "name": "Engine 18 Chicago Fire",
       "image": "chicagoFire.jpg",
@@ -24,6 +27,7 @@
       "locked": false
     },
     {
+      "id": "4",
       "neighborhood": "Museum Campus",
       "name": "Alder Planetarium",
       "image": "museumCampus.jpg",
@@ -32,6 +36,7 @@
       "locked": false
     },
     {
+        "id": "5",
         "neighborhood": "Little Italy",
         "name": "Jim's Original",
         "image": "jims.jpg",
@@ -40,6 +45,7 @@
         "locked": false
     },
     {
+        "id": "6",    
         "neighborhood": "Loop",
         "name": "Buddy Guy's Legends",
         "image": "BGLegends.jpg",
@@ -48,21 +54,41 @@
         "locked": true
     },
     {
+        "id": "7",
         "neighborhood": "Old Town",
         "name": "The Second City",
-        "image": "chicagoFire.jpg",
+        "image": "secondcity.jpg",
         "description": "NA",
         "coordinates": [41.91122084556429, -87.63536259556223],
         "locked": true
     },
     {
+        "id": "8",
         "neighborhood": "Museum Campus",
         "name": "Northerly Island - Southern Tip",
         "image": "NISouthernTip.webp",
         "description": "NA",
         "coordinates": [41.85330738518701, -87.6085833165336],
         "locked": false
-    }
+    },
+    {
+      "id": "9",
+      "neighborhood": "South Loop",
+      "name": "Glessner House",
+      "image": "glessnerHouse.jpg",
+      "description": "NA",
+      "coordinates": [41.85773130764835, -87.62122008121241],
+      "locked": true
+    },
+    {
+      "id": "10",
+      "neighborhood": "Lake View",
+      "name": "Belmont-Sheffield Bank & Trust",
+      "image": "home.jpg",
+      "description": "NA",
+      "coordinates": [41.93968402905355, -87.65444127116459],
+      "locked": true
+    }  
 
   
   ]

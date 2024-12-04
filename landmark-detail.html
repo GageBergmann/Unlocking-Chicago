@@ -4,23 +4,51 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Landmark Details</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <style>
       /* Basic styles */
-      body {
+      body,
+      html {
         font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
+        height: 100%;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
         background-color: #f0f0f0;
       }
-      .container {
+      .app-container {
         width: 375px;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
+        height: 667px;
+        border: 2px solid #333;
+        border-radius: 20px;
+        background-color: #e9e9e9;
+        overflow: hidden;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        height: 90px;
+        background-color: transparent;
+        color: #303030;
+        display: flex;
+        justify-content: space-between;
+        text-align: right;
+        align-items: center;
+        padding: 5px 245px;
+        font-size: 20px;
+        font-weight: bold;
+        position: relative;
+      }
+      .back-arrow {
+        font-size: 34px;
+        color: #303030;
+        text-decoration: none;
+        position: absolute;
+        left: 15px;
       }
       .tabs {
         display: flex;
@@ -55,6 +83,7 @@
         width: 100%;
         height: auto;
         margin-bottom: 10px;
+        object-fit: cover;
       }
       input[type="file"] {
         display: block;
@@ -63,7 +92,12 @@
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="app-container">
+      <div class="header">
+        <a href="landmarks.html" class="back-arrow"
+          ><i class="fa fa-chevron-left"></i
+        ></a>
+      </div>
       <div class="tabs">
         <div class="tab active" onclick="switchTab('description')">
           Description
@@ -84,22 +118,28 @@
     <script>
       // Parse URL parameters
       const urlParams = new URLSearchParams(window.location.search);
-      const landmarkId = urlParams.get("id");
+      const landmarkId = urlParams.get("id"); // Get the ID from the URL
 
       // Fetch landmarks data
       fetch("landmarks.JSON")
         .then((response) => response.json())
         .then((landmarks) => {
+          // Find the landmark with the matching ID
           const landmark = landmarks.find((l) => l.id === landmarkId);
-          if (!landmark) return;
+          if (!landmark) {
+            console.error("Landmark not found");
+            return;
+          }
 
           // Populate description tab
-          document.getElementById("name").textContent = landmark.name;
-          document.getElementById("description").textContent =
+          document.getElementById("landmark-name").textContent = landmark.name;
+          document.getElementById("landmark-description").textContent =
             landmark.description;
 
           // Populate gallery tab
-          document.getElementById("image").src = landmark.image;
+          const neighborhoodFolder = landmark.neighborhood.replace(/\s+/g, ""); // Remove spaces for folder name
+          const imagePath = `images/${neighborhoodFolder}/${landmark.image}`;
+          document.getElementById("gallery-photo").src = imagePath;
         })
         .catch((error) => console.error("Error loading landmarks:", error));
 

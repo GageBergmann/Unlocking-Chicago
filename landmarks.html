@@ -8,6 +8,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+
     <style>
       /* Basic reset */
       * {
@@ -19,6 +20,7 @@
       /* App container */
       body,
       html {
+        margin-right: 160px;
         font-family: Arial, sans-serif;
         height: 100%;
         display: flex;
@@ -144,7 +146,7 @@
         width: 100%;
         height: 100px;
         background-color: #ccc;
-        border-radius: 5px;
+        border-radius: 5px; /* Ensure border radius is consistent */
         margin-bottom: 5px;
         object-fit: cover;
       }
@@ -158,14 +160,48 @@
         text-overflow: ellipsis;
       }
 
+      .svg-blur {
+        filter: url(#sharpBlur);
+      }
+
       /* Styles for locked landmarks */
       .landmark-item[data-locked="true"] .landmark-photo {
-        filter: blur(5px);
         position: relative;
+        border-radius: 5px; /* Ensure rounded corners are applied */
+        filter: url(#sharpBlur);
       }
 
       .landmark-item[data-locked="true"] .landmark-name {
         visibility: hidden;
+      }
+
+      .landmark-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 95%; /* Adjust to fit inside the container */
+        margin-top: -15px;
+      }
+
+      .landmark-distance {
+        font-size: 12px;
+        color: #333;
+        margin-right: 10px;
+      }
+
+      .landmark-go-button {
+        background-color: #22b14c;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        height: 16px;
+        text-align: center;
+        vertical-align: middle;
+        padding: 0;
+        width: 50px;
       }
 
       .landmark-item[data-locked="true"]::after {
@@ -186,6 +222,16 @@
     </style>
   </head>
   <body>
+    <svg class="hideSvgSoThatItSupportsFirefox">
+      <filter id="sharpBlur">
+        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+        <feColorMatrix
+          type="matrix"
+          values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 9 0"
+        ></feColorMatrix>
+        <feComposite in2="SourceGraphic" operator="in"></feComposite>
+      </filter>
+    </svg>
     <div class="app-container">
       <!-- Header -->
       <div class="header">
@@ -193,7 +239,6 @@
           ><i class="fa fa-chevron-left"></i
         ></a>
         <div class="header-text">
-          <div>8/13</div>
           <div class="landmark-counter">Landmarks Found</div>
         </div>
       </div>
@@ -209,7 +254,7 @@
         <button class="filter-button" onclick="filterLandmarks('South Loop')">
           South Loop
         </button>
-        <button class="filter-button" onclick="filterLandmarks('Lakeview')">
+        <button class="filter-button" onclick="filterLandmarks('Lake View')">
           Lakeview
         </button>
         <button class="filter-button" onclick="filterLandmarks('Hyde Park')">
@@ -242,16 +287,25 @@
       document.addEventListener("DOMContentLoaded", () => {
         fetch("landmarks.JSON")
           .then((response) => response.json())
-          .then((landmarks) => displayLandmarks(landmarks))
+          .then((landmarks) => {
+            displayLandmarks(landmarks);
+            updateLandmarkCounter(landmarks); // Initial count
+          })
           .catch((error) => console.error("Error loading landmarks:", error));
       });
 
       function displayLandmarks(landmarks) {
         const contentDiv = document.querySelector(".content");
+        contentDiv.innerHTML = ""; // Clear existing landmarks
 
         const userCoords = { lat: 41.8781, lng: -87.6298 }; // Replace with actual user location
 
         landmarks.forEach((landmark) => {
+          // Filter landmarks based on active filter
+          if (activeFilter && landmark.neighborhood !== activeFilter) {
+            return;
+          }
+
           // Create the landmark item container
           const landmarkItem = document.createElement("div");
           landmarkItem.classList.add("landmark-item");
@@ -286,33 +340,33 @@
               landmark.coordinates[1]
             );
 
+            // Create the distance and button container
+            const actionsDiv = document.createElement("div");
+            actionsDiv.classList.add("landmark-actions");
+
             // Create the distance display
             const distanceDiv = document.createElement("div");
+            distanceDiv.classList.add("landmark-distance");
             distanceDiv.textContent = `${distance.toFixed(1)} mi`;
-            distanceDiv.style.fontSize = "12px";
-            distanceDiv.style.color = "#333";
-            distanceDiv.style.marginTop = "5px";
-            landmarkItem.appendChild(distanceDiv);
 
+            // Create the "Go" button
             const goButton = document.createElement("button");
             goButton.textContent = "Go";
-            goButton.style.backgroundColor = "#22b14c";
-            goButton.style.color = "#fff";
-            goButton.style.border = "none";
-            goButton.style.borderRadius = "5px";
-            goButton.style.padding = "5px 10px";
-            goButton.style.fontSize = "14px";
-            goButton.style.marginTop = "5px";
-            goButton.style.cursor = "pointer";
+            goButton.classList.add("landmark-go-button");
             goButton.onclick = () => {
               const query = `?lat=${landmark.coordinates[0]}&lng=${landmark.coordinates[1]}`;
               window.location.href = `compass.html${query}`;
             };
-            landmarkItem.appendChild(goButton);
+
+            // Append distance and button to the container
+            actionsDiv.appendChild(distanceDiv);
+            actionsDiv.appendChild(goButton);
+
+            // Append the actions container to the landmark item
+            landmarkItem.appendChild(actionsDiv);
 
             // Blur image and add locked label
-            img.style.filter = "blur(5px)";
-
+            /*img.style.filter = "blur(5px)";*/
             nameDiv.style.visibility = "hidden";
             landmarkItem.style.pointerEvents = "none"; // Prevent interaction
           } else {
@@ -342,49 +396,59 @@
         return R * c;
       }
 
+      function updateLandmarkCounter(landmarks) {
+        const totalLandmarks = activeFilter
+          ? landmarks.filter(
+              (landmark) => landmark.neighborhood === activeFilter
+            ).length
+          : landmarks.length;
+        const unlockedLandmarks = activeFilter
+          ? landmarks.filter(
+              (landmark) =>
+                landmark.neighborhood === activeFilter && !landmark.locked
+            ).length
+          : landmarks.filter((landmark) => !landmark.locked).length;
+
+        const counterDiv = document.querySelector(".landmark-counter");
+        counterDiv.textContent = `${unlockedLandmarks}/${totalLandmarks} Landmarks Found`;
+      }
+
       function filterLandmarks(neighborhood) {
         const buttons = document.querySelectorAll(".filter-button");
 
-        // Check if the same neighborhood is selected again
+        // Check if the same neighborhood is selected again (turning off the filter)
         if (activeFilter === neighborhood) {
           activeFilter = ""; // Reset filter to show all
         } else {
           activeFilter = neighborhood; // Set the active filter
         }
 
-        // Update button styles, show only the selected button, and add/remove "X"
+        // Update button styles
         buttons.forEach((button) => {
-          if (button.textContent.trim() === neighborhood && activeFilter) {
-            button.classList.add("active");
-            button.style.display = "inline-flex";
-            if (!button.querySelector(".close")) {
-              const closeButton = document.createElement("span");
-              closeButton.className = "close";
-              closeButton.innerHTML = " X";
-              closeButton.onclick = () => resetFilter();
-              button.appendChild(closeButton);
-            }
-          } else {
+          if (
+            activeFilter === "" ||
+            button.textContent.trim() !== neighborhood
+          ) {
+            // Reset buttons to default state
             button.classList.remove("active");
-            const closeButton = button.querySelector(".close");
-            if (closeButton) {
-              closeButton.remove();
-            }
-            button.style.display = activeFilter ? "none" : "inline-flex";
+            button.style.backgroundColor = "#d4d4d4";
+            button.style.color = "#505050";
+          } else {
+            // Highlight the selected button
+            button.classList.add("active");
+            button.style.backgroundColor = "#168ce1";
+            button.style.color = "#fff";
           }
         });
 
-        // Filter landmark items based on the selected neighborhood
-        document.querySelectorAll(".landmark-item").forEach((item) => {
-          if (
-            activeFilter === "" ||
-            item.dataset.neighborhood === activeFilter
-          ) {
-            item.style.display = "flex";
-          } else {
-            item.style.display = "none";
-          }
-        });
+        // Fetch and display landmarks again based on the filter
+        fetch("landmarks.JSON")
+          .then((response) => response.json())
+          .then((landmarks) => {
+            displayLandmarks(landmarks);
+            updateLandmarkCounter(landmarks); // Update count for filtered view
+          })
+          .catch((error) => console.error("Error loading landmarks:", error));
       }
 
       function resetFilter() {
