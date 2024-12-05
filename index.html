@@ -266,7 +266,7 @@
         </div>
         <!-- Secondary Map Tile -->
         <div class="footer-text">
-          You've Explored <span class="percentage2">0.63%</span> of Chicago!
+          You've Explored <span class="percentage2"></span> of Chicago!
         </div>
         <div class="pull-bar" id="secondPullBar" onclick="toggleFooter()"></div>
         <div class="shadowBox"></div>
@@ -677,18 +677,20 @@
 
         if (footer.classList.contains("active")) {
           // Update text and color when footer is expanded
-          landmarksButton.textContent = "8/389 Landmarks";
-          leaderboardButton.textContent = "#87 Leaderboard";
+          landmarksButton.textContent = "4/15 Landmarks";
+          leaderboardButton.textContent = "#5 Leaderboard";
           landmarksButton.classList.add("navy");
           leaderboardButton.classList.add("navy");
         } else {
           // Revert text and color when footer is collapsed
           landmarksButton.textContent = "3/13 Landmarks";
-          leaderboardButton.textContent = "#56 Leaderboard";
+          leaderboardButton.textContent = "#3 Leaderboard";
           landmarksButton.classList.remove("navy");
           leaderboardButton.classList.remove("navy");
         }
       }
+
+      // Initialize the secondary map
 
       // Initialize the secondary map
       var secondaryMap = L.map("secondary-map", {
@@ -706,19 +708,64 @@
         }
       ).addTo(secondaryMap);
 
+      // Function to calculate total percentage explored
+      function calculateTotalExploredPercentage() {
+        if (!boundariesData || exploredAreas.features.length === 0) {
+          return 0; // No boundaries or explored areas
+        }
+
+        // Calculate the total area of all boundaries
+        const totalBoundariesArea = turf.area(boundariesData);
+
+        // Calculate the total area of explored features
+        const totalExploredArea = exploredAreas.features.reduce(
+          (acc, feature) => acc + turf.area(feature),
+          0
+        );
+
+        // Return the percentage explored
+        return (totalExploredArea / totalBoundariesArea) * 100;
+      }
+
+      // Function to render explored areas on the secondary map
+      function renderSecondaryMap() {
+        // Add explored areas to the secondary map
+        L.geoJSON(exploredAreas, {
+          style: {
+            fillColor: "#0d4d7b", // Blue fill for explored areas
+            color: "#0d4d7b", // Blue border for explored areas
+            weight: 1,
+            fillOpacity: 0.9,
+          },
+        }).addTo(secondaryMap);
+
+        // Calculate the percentage explored and update the footer text
+        const totalPercentageExplored =
+          calculateTotalExploredPercentage().toFixed(2);
+        document.querySelector(".percentage2").textContent =
+          totalPercentageExplored + "%";
+      }
+
       fetch("Boundaries.geojson")
         .then((response) => response.json())
         .then((data) => {
-          var boundariesLayer2 = L.geoJSON(data, {
+          boundariesData = data;
+
+          // Add boundaries to the secondary map
+          L.geoJSON(boundariesData, {
             style: function () {
               return {
                 color: "#0d4d7b",
-                weight: 0.9,
+                color: "rgb(22, 140, 205)",
+                weight: 0,
                 opacity: 1,
-                fillOpacity: 0.7,
+                fillOpacity: 0.4,
               };
             },
           }).addTo(secondaryMap);
+
+          // Render user's explored areas on the secondary map
+          renderSecondaryMap();
         })
         .catch((error) => console.error("Error loading GeoJSON:", error));
 

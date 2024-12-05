@@ -13,7 +13,7 @@
     "neighborhood": "West Loop",
     "name": "Union Station",
     "image": "union.jpg",
-    "description": "Decription TBA",
+    "description": "Chicago Union Station is an intercity and commuter rail terminal located in the West Loop neighborhood of the Near West Side of Chicago. Amtrak's flagship station in the Midwest, Union Station is the terminus of eight national long-distance routes and eight regional corridor routes. Six Metra commuter lines also terminate here. Union Station is just west of the Chicago River between West Adams Street and West Jackson Boulevard, adjacent to the Chicago Loop. Including approach and storage tracks, it covers about nine and a half city blocks (mostly underground, beneath streets and skyscrapers, some built with the earliest usage of railway air rights). The present station opened in 1925, replacing an earlier union station on this site built in 1881. The station is the fourth-busiest rail station in the United States, after Pennsylvania Station, Grand Central Terminal, and Jamaica station in New York City,[3] and the busiest outside of the Northeast Corridor. It handles about 140,000 passengers on an average weekday (including 10,000 Amtrak passengers).[4] It has Bedford limestone Beaux-Arts facades, and an interior with massive Corinthian columns, marble floors, and a Great Hall, highlighted by brass lamps.[5] The station connects to multiple transit authorities including the Chicago Transit Authority bus and Chicago L lines, Metra, Pace, Greyhound, and more either within the station or within walking distance.",
     "coordinates": [41.87881501763317, -87.63977227116388],
     "locked": false
     },
@@ -31,7 +31,7 @@
       "neighborhood": "Museum Campus",
       "name": "Alder Planetarium",
       "image": "museumCampus.jpg",
-      "description": "A hub for museums including the Field Museum.",
+      "description": "The Adler Planetarium is a public museum in Chicago, Illinois, dedicated to astronomy and astrophysics. It was founded in 1930 by local businessman Max Adler. Located on the northeastern tip of Northerly Island on Lake Michigan, the Adler Planetarium was the first planetarium in the United States. It is part of Chicago's Museum Campus, which includes the John G. Shedd Aquarium and The Field Museum. The Planetarium's mission is to inspire exploration and understanding of the universe. The Adler Planetarium opened to the public on May 12, 1930.[3] Its architect, Ernest A. Grunsfeld Jr., was awarded the gold medal of the Chicago chapter of the American Institute of Architects in 1931 for its design.[4] In 1987, it was declared a National Historic Landmark.[2][5] The Adler has three theaters, space science exhibitions, including the Gemini 12 space capsule, and a collection of antique scientific instruments and print materials. In addition, the Adler Planetarium hosts the Doane Observatory, a research-active public observatory.",
       "coordinates": [41.8663, -87.6068],
       "locked": false
     },
@@ -67,7 +67,7 @@
         "neighborhood": "Museum Campus",
         "name": "Northerly Island - Southern Tip",
         "image": "NISouthernTip.webp",
-        "description": "NA",
+        "description": "Northerly Island (also Northerly Island Park) is a 119-acre (48 ha) human-made peninsula and park located on Chicago's Lake Michigan lakefront.[1] Originally constructed in 1925, Northerly Island was the former site of the Century of Progress world's fair and later Meigs Field airport and, since Meigs Field's closure, has been a recreational area part of Chicago's Museum Campus. It is the site of the Adler Planetarium, the Huntington Bank Pavilion (a semi-temporary concert venue), the Northerly Island Natural Area, the 12th Street Beach and numerous art installations. Per its name, Northerly Island was constructed as an island, but is connected to the lakefront by a causeway at the northern end carrying Solidarity Drive to the planetarium.[2]",
         "coordinates": [41.85330738518701, -87.6085833165336],
         "locked": false
     },
