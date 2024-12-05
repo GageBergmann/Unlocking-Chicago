@@ -4,7 +4,7 @@
     "neighborhood": "Museum Campus",
     "name": "Soldier Field",
     "image": "soldierfield.jpg",
-    "description": "Decription TBA",
+    "description": "Soldier Field is a multi-purpose stadium on the Near South Side of Chicago, Illinois, United States. Opened in 1924 and reconstructed in 2003, the stadium has served as the home of the Chicago Bears from the National Football League (NFL) since 1971, as well as Chicago Fire FC of Major League Soccer (MLS) from 1998 to 2006 and since 2020. It also regularly hosts stadium concerts and other large crowd events. The stadium has a football capacity of 62,500, making it the smallest stadium in the NFL. Soldier Field is also the oldest stadium established in the NFL and 3rd oldest in MLS. The stadium's interior was rebuilt as part of a major renovation project in 2002, which modernized the facility but lowered its seating capacity, eventually causing it to be delisted as a National Historic Landmark in 2006. Soldier Field has served as the home venue for a number of other sports teams in its history, including the Chicago Cardinals of the NFL and University of Notre Dame football. It hosted the 1994 FIFA World Cup, the 1999 FIFA Women's World Cup, and multiple CONCACAF Gold Cup championships. In 1968, it hosted the inaugural World Games of the Special Olympics, as well as its second World Games in 1970. Other historic events have included large rallies with speeches, including by Amelia Earhart, Franklin D. Roosevelt, and Martin Luther King Jr.",
     "coordinates": [41.86261694649829, -87.61669827116371],
     "locked": false
     },
@@ -51,7 +51,7 @@
         "image": "BGLegends.jpg",
         "description": "NA",
         "coordinates": [41.872999005514146, -87.62617836441699],
-        "locked": true
+        "locked": false
     },
     {
         "id": "7",
@@ -88,7 +88,25 @@
       "description": "NA",
       "coordinates": [41.93968402905355, -87.65444127116459],
       "locked": true
-    }  
+    },
+    {
+      "id": "11",
+      "neighborhood": "Little Italy",
+      "name": "UIC Pavilion",
+      "image": "pavilion.webp",
+      "description": "NA",
+      "coordinates": [41.874742016869305, -87.65614754232725],
+      "locked": true
+    },
+    {
+      "id": "12",
+      "neighborhood": "Little Italy",
+      "name": "University of Illinois Chicago",
+      "image": "uic.webp",
+      "description": "NA",
+      "coordinates": [41.87188051360803, -87.6492504801078],
+      "locked": true
+    }    
 
   
   ]
