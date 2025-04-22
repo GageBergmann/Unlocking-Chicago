@@ -561,7 +561,8 @@
 
       // Handle user location detection
       map.on("locationfound", (e) => {
-        userCoords = { lat: e.latlng.lat, lng: e.latlng.lng };
+        //userCoords = { lat: e.latlng.lat, lng: e.latlng.lng };
+        userCoords = { lat: 41.881177488005335, lng: -87.63239945651894 };
         map.setView([userCoords.lat, userCoords.lng], 17); // Center map on user
         updateUserLocationMarker();
         addExploredArea();
